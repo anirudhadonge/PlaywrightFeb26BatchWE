@@ -41,11 +41,13 @@
 
 function display(fun){
     fun();
+    console.log("Called after a function");
 }
 
-// display(()=>{
-//     console.log("first arrow function");
-// })
+let fun1 = ()=>{
+    console.log("first arrow function");
+}
+display(fun1)
 
 // // let a = 5;
 // // let b = 6;
@@ -53,10 +55,10 @@ function display(fun){
 //     console.log(a+b);
 // })
 
-setTimeout(()=>{
-    console.log("display After 5 sec");
-},5000)
-console.log('Adding Two number');
-setTimeout((a=5,b=6)=>{
-    console.log(a+b);
-},5000);
+// setTimeout(()=>{
+//     console.log("display After 5 sec");
+// },5000)
+// console.log('Adding Two number');
+// setTimeout((a=5,b=6)=>{
+//     console.log(a+b);
+// },5000);
