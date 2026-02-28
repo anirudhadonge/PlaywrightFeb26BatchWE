@@ -50,11 +50,14 @@ class Student{
 }
 
 
-let anirudha = new Student('Anirudha',7,70);
-anirudha.addBranch('Mech');
-console.log(anirudha.getName);
-anirudha.setName = 'Hitesh';
-console.log(anirudha.getName);
+// let anirudha = new Student('Anirudha',7,70);
+// anirudha.addBranch('Mech');
+// console.log(anirudha.getName);
+// anirudha.setName = 'Hitesh';
+// console.log(anirudha.getName);
 // let hitesh = new Student('Hitesh', 23, 90);
 
 // console.log(hitesh);
+
+
+module.exports=Student;
