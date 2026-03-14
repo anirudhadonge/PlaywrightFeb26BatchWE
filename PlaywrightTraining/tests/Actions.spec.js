@@ -1,50 +1,159 @@
-import {test, expect} from '@playwright/test' //esmodule import export 
-import { BasePage } from '../PageModel/BasePage';
+import { test, expect } from "@playwright/test"; //esmodule import export
+import { BasePage } from "../PageModel/BasePage";
 
-
-test("Click Action test",async({page})=>{
-    await page.goto("https://the-internet.herokuapp.com/");
-    await page.locator("[href='/checkboxes']").click();
-})
+test("Click Action test", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator("[href='/checkboxes']").click();
+});
 
 /**
- * Fill : replica copy and paste, it clears the textbox and paste the new value . Input , textbox 
+ * Fill : replica copy and paste, it clears the textbox and paste the new value . Input , textbox
  * Press Sequentially: Replicate the human typing action. All the html tag, It does not clear the existing values or text
  */
-test('Fill and Press Sequentially ',async({page})=>{
-    await page.goto("https://the-internet.herokuapp.com/login");
+test("Fill and Press Sequentially ", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/login");
 
-    let basePage = new BasePage(page);
-    await page.waitForTimeout(3000);
-    await basePage.preseSequentially("#username",'tomsmith',500)
-    //await page.locator("#username").pressSequentially('tomsmith',{delay:500});
-    await page.waitForTimeout(3000);
-    await basePage.fill("#password",'SuperSecretPassword!');
-    //await page.locator("#password").fill('SuperSecretPassword!');
-    await page.waitForTimeout(3000);
-})
+  let basePage = new BasePage(page);
+  await page.waitForTimeout(3000);
+  await basePage.preseSequentially("#username", "tomsmith", 500);
+  //await page.locator("#username").pressSequentially('tomsmith',{delay:500});
+  await page.waitForTimeout(3000);
+  await basePage.fill("#password", "SuperSecretPassword!");
+  //await page.locator("#password").fill('SuperSecretPassword!');
+  await page.waitForTimeout(3000);
+});
 
-test("Select value from drop down",async({page})=>{
-    await page.goto("https://the-internet.herokuapp.com/");
-    await page.locator('[href="/dropdown"]').click();
-    let select = page.locator("select#dropdown");
-    await page.waitForTimeout(3000);
-    await select.selectOption({label:"Option 1"})
-    await page.waitForTimeout(3000);
-    await select.selectOption({value:'2'});
-    await page.waitForTimeout(3000);
-    await select.selectOption({index:1});
-    await page.waitForTimeout(3000);
-})
+test("Select value from drop down", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator('[href="/dropdown"]').click();
+  let select = page.locator("select#dropdown");
+  await page.waitForTimeout(3000);
+  await select.selectOption({ label: "Option 1" });
+  await page.waitForTimeout(3000);
+  await select.selectOption({ value: "2" });
+  await page.waitForTimeout(3000);
+  await select.selectOption({ index: 1 });
+  await page.waitForTimeout(3000);
+});
 
-test.only('Interaction with Check Box',async({page})=>{
-    await page.goto("https://the-internet.herokuapp.com/");
-    await page.locator('[href="/checkboxes"]').click();
-    await page.waitForTimeout(3000);
-    await page.locator("#checkboxes input").nth(0).check(); //actions
-    await page.waitForTimeout(3000);
-    await page.locator("#checkboxes input").nth(1).uncheck(); //actions
-    await expect(page.locator("#checkboxes input").nth(0)).toBeChecked(); //Validation
-    await expect(page.locator("#checkboxes input").nth(1)).not.toBeChecked(); // validation
-    await page.waitForTimeout(3000);
-})
+test("Interaction with Check Box", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator('[href="/checkboxes"]').click();
+  await page.waitForTimeout(3000);
+  await page.locator("#checkboxes input").nth(0).check(); //actions
+  await page.waitForTimeout(3000);
+  await page.locator("#checkboxes input").nth(1).uncheck(); //actions
+  await expect(page.locator("#checkboxes input").nth(0)).toBeChecked(); //Validation
+  await expect(page.locator("#checkboxes input").nth(1)).not.toBeChecked(); // validation
+  await page.waitForTimeout(3000);
+});
+
+test("File Upload Test", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator('[href="/upload"]').click();
+  //If the button that uploads the file is of input type
+  //await page.locator("#file-upload").setInputFiles("./../PlaywrightTraining/Files/Git_Overview.pdf");
+  let basePage = new BasePage(page);
+  await basePage.uploadFiles(
+    "./../PlaywrightTraining/Files/Git_Overview.pdf",
+    "#file-upload",
+  );
+  // const fse = page.waitForEvent('filechooser');
+  // await page.locator("#file-upload").click();
+  // const fc = await fse;
+  // await fc.setFiles(["./../PlaywrightTraining/Files/Git_Overview.pdf","./../PlaywrightTraining/Files/Git_Overview.pdf"]);
+  await page.waitForTimeout(5000);
+});
+
+test("Download Test", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator('[href="/download"]').click();
+  let basePage = new BasePage(page);
+  await basePage.downloadFile(
+    '[href="download/sample-upload.txt"]',
+    "./../PlaywrightTraining/Files/",
+  );
+  // const downloadEvent = page.waitForEvent('download');
+  // await page.locator('[href="download/test_upload.txt"]').click()
+  // const download = await downloadEvent;
+  // await download.saveAs("./../PlaywrightTraining/Files/"+download.suggestedFilename());
+});
+
+test("Working with Frames", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator('[href="/frames"]').click();
+  await page.locator('[href="/iframe"]').click();
+  let basePage = new BasePage(page);
+  let frame = await basePage.frameLocator("#mce_0_ifr");
+  await expect(frame.locator("#tinymce p")).toBeVisible();
+});
+
+test("Working with Alerts", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator('[href="/javascript_alerts"]').click();
+  dialog(true, page);
+  await page.locator('[onclick="jsAlert()"]').click();
+  await expect(page.locator("#result")).toHaveText(
+    "You successfully clicked an alert",
+  );
+  await page.waitForTimeout(5000);
+});
+
+test("Working with js Confirm", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator('[href="/javascript_alerts"]').click();
+  dialog(true, page);
+  // page.on('dialog',dialog=>{
+  //     dialog.accept()
+  //     dialog.dismiss()
+  // })
+  await page.locator('[onclick="jsConfirm()"]').click();
+  //await expect(page.locator("#result")).toHaveText("You successfully clicked an alert");
+  await page.waitForTimeout(5000);
+});
+
+test("Working with js Prompt", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator('[href="/javascript_alerts"]').click();
+  page.on("dialog", (dialog) => {
+    dialog.accept("This is a playwright demo class");
+  });
+  await page.locator('[onclick="jsPrompt()"]').click();
+  //await expect(page.locator("#result")).toHaveText("You successfully clicked an alert");
+  await page.waitForTimeout(5000);
+});
+
+function dialog(flag, page) {
+  if (flag) {
+    page.on("dialog", (dialog) => {
+      dialog.accept();
+    });
+  } else {
+    page.on("dialog", (dialog) => {
+      dialog.dismiss();
+    });
+  }
+}
+
+test("test For Handeling Basic Authencation", async ({ page }) => {
+  //   const context = await browser.newContext({
+  //     // httpCredentials: {
+  //     //   username: "admin",
+  //     //   password: "admin",
+  //     // },
+  //   });
+  //   const page = await context.newPage();
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator('[href="/digest_auth"]').click();
+  await expect(page.locator(".example p")).toContainText("Congratulations!");
+  await page.waitForTimeout(5000);
+});
+
+test.only("Handeling New Page", async ({ page ,context}) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.locator('[href="/windows"]').click();
+  const pageEvent = context.waitForEvent('page');
+  await page.locator('[href="/windows/new"]').click();
+  let newPage = await pageEvent;
+  await expect(newPage.locator(".example h3")).toHaveText("New Window");
+});
