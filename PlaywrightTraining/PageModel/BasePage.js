@@ -41,4 +41,8 @@ export class BasePage {
   async frameLocator(locatorString){
     return page.frameLocator(locatorString)
   }
+
+  async dragAndDrop(source, destination){
+     await this.page.locator(source).dragTo(this.page.locator(destination));
+  }
 }

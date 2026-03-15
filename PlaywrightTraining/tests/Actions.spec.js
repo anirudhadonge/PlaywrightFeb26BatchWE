@@ -1,51 +1,60 @@
 import { test, expect } from "@playwright/test"; //esmodule import export
 import { BasePage } from "../PageModel/BasePage";
 
-test("Click Action test", async ({ page }) => {
-  await page.goto("https://the-internet.herokuapp.com/");
-  await page.locator("[href='/checkboxes']").click();
-});
+test.describe.only("Grouping of test", async () => {
+  test.beforeAll("Before All Method", async () => {
+    console.log("Before All Method");
+  });
+  test.beforeEach("Navigating to Hero Kua App", async ({ page }) => {
+    console.log("Before Each Method");
+    await page.goto("https://the-internet.herokuapp.com/");
+  });
 
-/**
- * Fill : replica copy and paste, it clears the textbox and paste the new value . Input , textbox
- * Press Sequentially: Replicate the human typing action. All the html tag, It does not clear the existing values or text
- */
-test("Fill and Press Sequentially ", async ({ page }) => {
-  await page.goto("https://the-internet.herokuapp.com/login");
+  test.afterEach("This is after each method", async () => {
+    console.log("This is after each method");
+  });
 
-  let basePage = new BasePage(page);
-  await page.waitForTimeout(3000);
-  await basePage.preseSequentially("#username", "tomsmith", 500);
-  //await page.locator("#username").pressSequentially('tomsmith',{delay:500});
-  await page.waitForTimeout(3000);
-  await basePage.fill("#password", "SuperSecretPassword!");
-  //await page.locator("#password").fill('SuperSecretPassword!');
-  await page.waitForTimeout(3000);
-});
+  test("Click Action test", async ({ page }) => {
+    await page.locator("[href='/checkboxes']").click();
+  });
 
-test("Select value from drop down", async ({ page }) => {
-  await page.goto("https://the-internet.herokuapp.com/");
-  await page.locator('[href="/dropdown"]').click();
-  let select = page.locator("select#dropdown");
-  await page.waitForTimeout(3000);
-  await select.selectOption({ label: "Option 1" });
-  await page.waitForTimeout(3000);
-  await select.selectOption({ value: "2" });
-  await page.waitForTimeout(3000);
-  await select.selectOption({ index: 1 });
-  await page.waitForTimeout(3000);
-});
+  /**
+   * Fill : replica copy and paste, it clears the textbox and paste the new value . Input , textbox
+   * Press Sequentially: Replicate the human typing action. All the html tag, It does not clear the existing values or text
+   */
+  test("Fill and Press Sequentially ", async ({ page }) => {
+    let basePage = new BasePage(page);
+    await page.waitForTimeout(3000);
+    await basePage.preseSequentially("#username", "tomsmith", 500);
+    //await page.locator("#username").pressSequentially('tomsmith',{delay:500});
+    await page.waitForTimeout(3000);
+    await basePage.fill("#password", "SuperSecretPassword!");
+    //await page.locator("#password").fill('SuperSecretPassword!');
+    await page.waitForTimeout(3000);
+  });
 
-test("Interaction with Check Box", async ({ page }) => {
-  await page.goto("https://the-internet.herokuapp.com/");
-  await page.locator('[href="/checkboxes"]').click();
-  await page.waitForTimeout(3000);
-  await page.locator("#checkboxes input").nth(0).check(); //actions
-  await page.waitForTimeout(3000);
-  await page.locator("#checkboxes input").nth(1).uncheck(); //actions
-  await expect(page.locator("#checkboxes input").nth(0)).toBeChecked(); //Validation
-  await expect(page.locator("#checkboxes input").nth(1)).not.toBeChecked(); // validation
-  await page.waitForTimeout(3000);
+  test("Select value from drop down", async ({ page }) => {
+    await page.locator('[href="/dropdown"]').click();
+    let select = page.locator("select#dropdown");
+    await page.waitForTimeout(3000);
+    await select.selectOption({ label: "Option 1" });
+    await page.waitForTimeout(3000);
+    await select.selectOption({ value: "2" });
+    await page.waitForTimeout(3000);
+    await select.selectOption({ index: 1 });
+    await page.waitForTimeout(3000);
+  });
+
+  test("Interaction with Check Box", async ({ page }) => {
+    await page.locator('[href="/checkboxes"]').click();
+    // await page.locator("#checkboxes input").nth(0).check(); //actions
+    // await page.locator("#checkboxes input").nth(0).uncheck(); //actions
+    await page.locator("#checkboxes input").nth(1).uncheck(); //actions
+    await expect.soft(page.locator("#checkboxes input").nth(0)).toBeChecked(); //Validation
+    await expect
+      .soft(page.locator("#checkboxes input").nth(1))
+      .not.toBeChecked(); // validation
+  });
 });
 
 test("File Upload Test", async ({ page }) => {
@@ -149,11 +158,31 @@ test("test For Handeling Basic Authencation", async ({ page }) => {
   await page.waitForTimeout(5000);
 });
 
-test.only("Handeling New Page", async ({ page ,context}) => {
+
+
+test("Hover test", async ({ page }) => {
   await page.goto("https://the-internet.herokuapp.com/");
-  await page.locator('[href="/windows"]').click();
-  const pageEvent = context.waitForEvent('page');
-  await page.locator('[href="/windows/new"]').click();
-  let newPage = await pageEvent;
-  await expect(newPage.locator(".example h3")).toHaveText("New Window");
+  await page.locator('[href="/hovers"]').click();
+  await page.getByAltText("User Avatar").hover();
+  await page.waitForTimeout(5000);
+  //   await page.locator('[href="/users/1"]').click();
+  //   await expect(page.locator('body h1')).toBeVisible();
+});
+
+test("Drag and Drop test", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await page.waitForLoadState("load", { timeout: 5000 });
+  await page.locator('[href="/drag_and_drop"]').click();
+  let basePage = new BasePage(page);
+  await basePage.dragAndDrop("#column-a", "#column-b");
+  //await page.locator("#column-a").dragTo(page.locator("#column-b"));
+  await page.waitForTimeout(3000);
+  await page.locator("#column-a").waitFor();
+  await expect(page.locator("#column-a")).toHaveText("B");
+  await expect(page.locator("#column-b")).toHaveText("A");
+});
+
+test("Asserions demo", async ({ page }) => {
+  await page.goto("https://the-internet.herokuapp.com/");
+  await expect(page.locator("#content1 h2")).toBeVisible();
 });
