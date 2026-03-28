@@ -1,0 +1,4 @@
+{
+    "CreateBooking":"booking",
+    "GetBooking":"booking/"
+}
