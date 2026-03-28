@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test"; //esmodule import export
 import { BasePage } from "../PageModel/BasePage";
 
-test.describe.only("Grouping of test", async () => {
+test.describe("Grouping of test", async () => {
   test.beforeAll("Before All Method", async () => {
     console.log("Before All Method");
   });
@@ -25,7 +25,7 @@ test.describe.only("Grouping of test", async () => {
   test("Fill and Press Sequentially ", async ({ page }) => {
     let basePage = new BasePage(page);
     await page.waitForTimeout(3000);
-    await basePage.preseSequentially("#username", "tomsmith", 500);
+    await basePage.pressSequentially("#username", "tomsmith", 500);
     //await page.locator("#username").pressSequentially('tomsmith',{delay:500});
     await page.waitForTimeout(3000);
     await basePage.fill("#password", "SuperSecretPassword!");
@@ -57,7 +57,8 @@ test.describe.only("Grouping of test", async () => {
   });
 });
 
-test("File Upload Test", async ({ page }) => {
+test("@smoke @p1 File Upload Test", async ({ page }) => {
+  test.slow(); //10*3 = 30sec
   await page.goto("https://the-internet.herokuapp.com/");
   await page.locator('[href="/upload"]').click();
   //If the button that uploads the file is of input type
@@ -74,7 +75,7 @@ test("File Upload Test", async ({ page }) => {
   await page.waitForTimeout(5000);
 });
 
-test("Download Test", async ({ page }) => {
+test("@smoke Download Test", async ({ page }) => {
   await page.goto("https://the-internet.herokuapp.com/");
   await page.locator('[href="/download"]').click();
   let basePage = new BasePage(page);
@@ -144,7 +145,9 @@ function dialog(flag, page) {
   }
 }
 
-test("test For Handeling Basic Authencation", async ({ page }) => {
+test("test For Handeling Basic Authencation",{
+  tag:"@smoke"
+} ,async ({ page }) => {
   //   const context = await browser.newContext({
   //     // httpCredentials: {
   //     //   username: "admin",

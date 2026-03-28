@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from "@playwright/test";
 
 /**
  * Read environment variables from file.
@@ -13,31 +13,62 @@ import { defineConfig, devices } from '@playwright/test';
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir: './tests',
+  globalSetup:'./GlobalSetup/globalSetup.js',
+  timeout: 180000, // Maximum time within which the test should execute all the steps
+  // expect:{
+  //   timeout
+  // },
+  testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!process.env.CI,
+  forbidOnly: false,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  //retries: 2,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  //workers: 0,
+  //repeatEach:3,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+    ["html", { open: "never" }],
+    ["junit", { outputFile: "./my-reports/junit.xml" }],
+    ["json", { outputFile: "./jsonreport/report.json" }],
+    ["allure-playwright"],
+  ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    testIdAttribute: 'dataid',
+    testIdAttribute: "dataid",
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://localhost:3000',
-    httpCredentials:{
-      username:"admin",
-      password:"admin"
+    //baseURL: 'https://the-internet.herokuapp.com/',
+    httpCredentials: {
+      username: "admin",
+      password: "admin",
     },
+
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-    browserName:'chromium',
-    headless:false,
-    screenshot:'on'
+    trace: "on-first-retry",
+    browserName: "chromium",
+    //channel:'msedge',
+    headless: false,
+    screenshot: 'on',
+    viewport: null,
+    launchOptions: {
+      args: ["-start-maximized"],
+    },
+    // viewport:{ // setting up the resolution of the browser window.
+    //   height:50,
+    //   width:200
+    // }
+
+    // video: {
+    //   mode: "on",
+    //   size: {
+    //     height: 1080,
+    //     width: 1920,
+    //   },
+    // },
+
+    trace:'retain-on-failure'
   },
 
   /* Configure projects for major browsers */
@@ -85,4 +116,3 @@ export default defineConfig({
   //   reuseExistingServer: !process.env.CI,
   // },
 });
-

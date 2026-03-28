@@ -14,7 +14,7 @@ Locate by CSS or XPath
  */
 
 
-test("Test for Locator",async({page})=>{
+test("@smoke Test for Locator",async({page})=>{
     await page.goto("https://selectorshub.com/xpath-practice-page/");
     //await page.getByRole("checkbox").nth(0).check();
     //await page.getByPlaceholder('Enter your company').nth(0).fill('Alphabet');
