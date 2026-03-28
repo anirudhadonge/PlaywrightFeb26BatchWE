@@ -1,25 +1,29 @@
-import { page } from "@playwright/test";
+import {test } from "@playwright/test";
 
 export class BasePage {
   constructor(page) {
     this.page = page;
   }
 
-  getLocator(locatorString) {
-    return page.locator(locatorString);
+  async goto(url){
+    await this.page.goto(url);
   }
 
-  async clickOnElement(locator) {
+  getLocator(locatorString) {
+    return this.page.locator(locatorString);
+  }
+
+  async clickOnElement(locator,index=0) {
     console.log("Clicking on the locator " + locator);
-    await this.getLocator(locator).click();
+    await this.getLocator(locator).nth(index).click();
   }
 
   async fill(locator, value) {
     await this.getLocator(locator).fill(value);
   }
 
-  async preseSequentially(locator, value, delayTime = 0) {
-    await this.getLocator(locator).preseSequentially(value, {
+  async pressSequentially(locator, value, delayTime = 0) {
+    await this.getLocator(locator).pressSequentially(value, {
       delay: delayTime,
     });
   }

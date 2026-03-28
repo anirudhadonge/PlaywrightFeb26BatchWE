@@ -37,7 +37,7 @@ test.beforeEach("This is a before each method", async ({ page, context }) => {
   });
 });
 
-test("Handeling New Page", async ({ page, context }) => {
+test("@p1 @ADP-21345 Handeling New Page", async ({ page, context }) => {
   await test.step("Click on Multi Window Link", async () => {
     await webPage.locator('[href="/windows"]').click();
   });
