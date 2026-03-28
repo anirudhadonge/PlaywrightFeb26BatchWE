@@ -28,7 +28,7 @@ let bookingDetails = {
 let header ={
     "Content-Type": "application/json"
 }
-test.only("API Test",async({request})=>{
+test("API Test",async({request})=>{
    const url = process.env.APIBase+ApiEndPoint.CreateBooking;
    console.log(url);
    const response =  await request.post(url,{
