@@ -5,7 +5,7 @@ import { baseTest } from '../Fixtures/Fixture';
 import { globalSetup } from '../GlobalSetup/globalSetup';
 import addToCart from "./../TestData/addToCart.json"
 
-test("Login to Application",async({page})=>{
+test("@addToCartLogin to Application",async({page})=>{
     console.log(addToCart);
     let signInPage =  new SignInPage(page);
     await signInPage.goto(process.env.URL);

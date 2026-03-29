@@ -122,6 +122,7 @@ test("Working with js Confirm", async ({ page }) => {
   await page.waitForTimeout(5000);
 });
 
+
 test("Working with js Prompt", async ({ page }) => {
   await page.goto("https://the-internet.herokuapp.com/");
   await page.locator('[href="/javascript_alerts"]').click();
