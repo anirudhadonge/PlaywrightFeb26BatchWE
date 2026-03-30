@@ -123,6 +123,7 @@ test("Working with js Confirm", async ({ page }) => {
 });
 
 
+
 test("Working with js Prompt", async ({ page }) => {
   await page.goto("https://the-internet.herokuapp.com/");
   await page.locator('[href="/javascript_alerts"]').click();
@@ -186,7 +187,52 @@ test("Drag and Drop test", async ({ page }) => {
   await expect(page.locator("#column-b")).toHaveText("A");
 });
 
+test("Herokuapp navigation test", async ({ page }) => {
+  class HerokuappPage {
+    constructor(page) {
+      this.page = page;
+      this.url = "https://the-internet.herokuapp.com/";
+      this.header = "h1";
+    }
+
+    async goto() {
+      await this.page.goto(this.url);
+    }
+
+    async getHeaderText() {
+      return await this.page.locator(this.header).textContent();
+    }
+  }
+
+  const herokuappPage = new HerokuappPage(page);
+  await herokuappPage.goto();
+
+  await expect(page).toHaveURL(/the-internet\.herokuapp\.com\/|the-internet\.herokuapp\.com\//); // fallback check
+  await expect(page).toHaveURL(/the-internet\.herokuapp\.com/);
+  await expect(herokuappPage.getHeaderText()).resolves.toContain("Welcome to the-internet");
+});
+
+
 test("Asserions demo", async ({ page }) => {
   await page.goto("https://the-internet.herokuapp.com/");
   await expect(page.locator("#content1 h2")).toBeVisible();
+});
+
+test("Form Authentication Login Test", async ({ page }) => {
+  // Navigate to Herokuapp home
+  await page.goto("https://the-internet.herokuapp.com/");
+
+  // Click on Form Authentication link
+  await page.locator('[href="/login"]').click();
+
+  // Fill username and password
+  await page.locator("#username").fill("tomsmith");
+  await page.locator("#password").fill("SuperSecretPassword!");
+
+  // Click login button
+  await page.locator('button[type="submit"]').click();
+
+  // Validate login success
+  await expect(page.locator(".flash.success")).toContainText("You logged into a secure area!");
+  await expect(page.locator("h2")).toHaveText("Secure Area");
 });

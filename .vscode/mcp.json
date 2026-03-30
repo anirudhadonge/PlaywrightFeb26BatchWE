@@ -1,0 +1,14 @@
+{
+  "servers": {
+    "playwright": {
+      "type": "local",
+      "command": "npx",
+      "tools": [
+        "*"
+      ],
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    }
+  }
+}
